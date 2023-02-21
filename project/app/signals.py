@@ -1,9 +1,12 @@
 from PyQt6.QtWidgets import QTableWidgetItem
 import pyqtgraph as pg
+import random
 from math import (cos, sin, radians, sqrt)
 from objects import (param, launch_btn, clear_btn, table)
 
 count = 0
+colour: str
+plt = pg.PlotWidget
 G = 9.81
 C = 0.15
 RHO = 1.29
@@ -58,9 +61,17 @@ def start():
 
 
 def draw():
-    theTitle = "Simulation: Flight - GRAPH"
-    plt = pg.plot(X, Y, title=theTitle, pen='r')
-    plt.showGrid(x=True, y=True)
+    global colour, count, plt
+    colour = "#" + ''.join([random.choice('ABCDEF0123456789') for i in range(6)])
+
+    if count == 1:
+        title = "Simulation: Flight - GRAPH"
+        plt = pg.plot(X, Y, title=title, pen=colour)
+        plt.setBackground("w")
+        plt.showGrid(x=True, y=True)
+    else:
+        line = pg.PlotCurveItem(x=X, y=Y, pen=pg.mkPen(color=colour, width=1))
+        plt.addItem(line)
 
 
 def results(dt: float, x: float, max: float, speed: float):
